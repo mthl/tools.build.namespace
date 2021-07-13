@@ -2,5 +2,5 @@
  :deps
  {org.clojure/clojure {:mvn/version "1.10.3"}
   org.clojure/tools.namespace {:mvn/version "1.1.0"}
-  io.github.clojure/tools.build {:sha "255b68bef6ff26506b3e0adec83899667bf807ee"}}}
+  io.github.clojure/tools.build {:git/tag "v0.1.3" :git/sha "688245e"}}}
 
