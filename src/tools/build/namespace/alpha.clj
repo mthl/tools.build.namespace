@@ -7,7 +7,6 @@
    [clojure.set :as set]
    [clojure.edn :as edn]
    [clojure.java.io :as io]
-   [clojure.tools.build.api :as b]
    [clojure.tools.namespace.file :as file]
    [clojure.tools.namespace.find :as find]
    [clojure.tools.namespace.parse :as parse]
@@ -99,6 +98,13 @@
     :cljs find/cljs
     (throw (ex-info "Lang must be either :clj or :cljs" {:lang lang}))))
 
+(defn- write-file
+  [^File f content]
+  (let [dir (-> f .getCanonicalFile .getParent io/file)]
+    (if (or (.exists dir) (.mkdirs dir))
+      (spit f content)
+      (throw (ex-info (str "Can't create directory " dir) {})))))
+
 (defprotocol Scan
   (fresh-namespaces [this])
   (commit! [this]))
@@ -113,7 +119,7 @@
   (let [platform (lang->platform lang)
         main-ns-files (ns-files dirs platform)
         extra-ns-files (ns-files extra-dirs platform)
-        tf (b/resolve-path state-file)
+        tf (io/file state-file)
         old-ns-files (set (when (.exists ^File tf)
                             (-> tf slurp edn/read-string)))
         new-ns-files (set/union main-ns-files extra-ns-files)
@@ -124,5 +130,4 @@
              (map :ns)
              (filter ns-candidates)))
       (commit! [_]
-        (b/write-file {:path state-file
-                       :content new-ns-files})))))
+        (write-file tf new-ns-files)))))
