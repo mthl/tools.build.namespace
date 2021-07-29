@@ -2,6 +2,10 @@
 
 Tool to process only fresh namespaces when performing a build task (compilation, tests, ...).
 
+This is an extension to [tools.namespace](https://github.com/clojure/tools.namespace) which track transitive namespace modifications across multiple independent process executions instead of a single REPL session.
+
+The main use case for such extension is *Continuous Integration* (CI).
+
 ## Usage
 
 In order to use it you must add the following line in your `deps.edn`:
