@@ -1,0 +1,17 @@
+name: Clojure CI
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: DeLaGuardo/setup-clojure@3.4
+      with:
+        cli: 1.10.3.905
+
+    - uses: actions/checkout@v2
+
+    - name: Run tests
+      run: clojure -X:test
